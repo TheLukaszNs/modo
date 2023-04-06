@@ -5,6 +5,27 @@
       "bundler": "metro"
     },
     "name": "modo",
-    "slug": "modo"
+    "slug": "modo",
+    "extra": {
+      "eas": {
+        "projectId": "0b7014e7-f2a7-45aa-8c4c-3f75e6936f20"
+      }
+    },
+    "ios": {
+      "bundleIdentifier": "com.thelukaszns.modo",
+      "googleServicesFile": "./GoogleService-Info.plist"
+    },
+    "plugins": [
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ]
+    ]
   }
 }
