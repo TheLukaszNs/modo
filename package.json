@@ -9,7 +9,7 @@
     "@react-native-firebase/app": "^17.4.2",
     "@react-native-firebase/auth": "^17.4.2",
     "@react-native-firebase/firestore": "^17.4.2",
-    "@shopify/react-native-skia": "0.1.172",
+    "@shopify/react-native-skia": "^0.1.182",
     "@shopify/restyle": "^2.4.2",
     "@types/react": "~18.0.27",
     "expo": "^48.0.7",
