@@ -12,8 +12,7 @@
       }
     },
     "ios": {
-      "bundleIdentifier": "com.thelukaszns.modo",
-      "googleServicesFile": "process.env.GOOGLE_SERVICES_IOS"
+      "bundleIdentifier": "com.thelukaszns.modo"
     },
     "plugins": [
       "@react-native-firebase/app",
