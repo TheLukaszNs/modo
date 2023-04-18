@@ -12,6 +12,7 @@ const theme = createTheme({
     accent: palette.amber,
 
     textOnBackground: "black",
+    textOnBlack: "white",
   },
   spacing: {
     s: 8,
