@@ -5,7 +5,6 @@ import { Box } from "../UI/Box";
 export const StatsHeader = ({}) => {
   return (
     <Box
-      backgroundColor="accent"
       px="l"
       py="xl"
       mt="l"

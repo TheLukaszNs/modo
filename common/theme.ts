@@ -1,18 +1,23 @@
 import { createTheme } from "@shopify/restyle";
 
 const palette = {
-  cream: "#F0F0C9",
-  amber: "#F2BB05",
-  indigo: "#124E78",
+  lightBlue: "#E6FFFD",
+  pastelGreen: "#B7F0B1",
+  pastelYellow: "#FDF3BA",
+  pastelRed: "#FF6F6F",
+  pastelBlue: "#557AFF",
+  pastelBeige: "#FFFAEF",
+
+  black: "#000000",
+  white: "#FFFFFF",
 };
 
 const theme = createTheme({
   colors: {
-    mainBackground: palette.cream,
-    accent: palette.amber,
+    mainBackground: palette.pastelBeige,
+    mainForeground: palette.black,
 
-    textOnBackground: "black",
-    textOnBlack: "white",
+    ...palette,
   },
   spacing: {
     s: 8,
@@ -35,6 +40,13 @@ const theme = createTheme({
     cardSubheader: {
       fontSize: 14,
       fontWeight: "700",
+    },
+  },
+  buttonVariants: {
+    regular: {
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: 4,
     },
   },
 });

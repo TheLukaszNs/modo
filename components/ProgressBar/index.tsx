@@ -78,7 +78,7 @@ export const ProgressBar = ({
         origin={center}
         transform={[{ rotate: -Math.PI / 2 }]}
       />
-      <Circle c={center} r={radius - width / 2} color={colors.accent} />
+      <Circle c={center} r={radius - width / 2} />
     </Canvas>
   );
 };

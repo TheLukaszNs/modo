@@ -1,11 +1,12 @@
 import { Text } from "../Typography";
 import { Box } from "../UI/Box";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import auth from "@react-native-firebase/auth";
 
 export const Header = () => {
   return (
     <Box flexDirection="row" justifyContent="space-between" alignItems="center">
-      <Text variant="header" color="textOnBackground">
+      <Text variant="header">
         Hej,{"\n"}
         <Text variant="header" fontWeight="900">
           Łukasz
@@ -15,8 +16,6 @@ export const Header = () => {
 
       <Box flexDirection="row" alignItems="center" gap="m">
         <Box
-          backgroundColor="accent"
-          borderColor="accent"
           width={48}
           height={48}
           borderRadius={32}
@@ -26,7 +25,13 @@ export const Header = () => {
           <Icon name="account" color="black" size={24} />
         </Box>
 
-        <Icon name="dots-vertical" size={24} />
+        <Icon
+          name="logout"
+          size={24}
+          onPress={async () => {
+            await auth().signOut();
+          }}
+        />
       </Box>
     </Box>
   );

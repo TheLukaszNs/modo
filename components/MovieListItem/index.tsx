@@ -53,14 +53,8 @@ export const MovieListItem = ({ movie, tags }: Props) => {
           showsHorizontalScrollIndicator={false}
         >
           {tags.map((tag, index) => (
-            <Box
-              key={index}
-              py="s"
-              px="m"
-              backgroundColor="textOnBackground"
-              borderRadius={16}
-            >
-              <Text color="accent" fontWeight="700" fontSize={12}>
+            <Box key={index} py="s" px="m" borderRadius={16}>
+              <Text fontWeight="700" fontSize={12}>
                 {tag}
               </Text>
             </Box>
@@ -109,7 +103,6 @@ const CardBackground = ({
         width={size.width}
         height={size.height}
         r={16}
-        color={theme.colors.accent}
       >
         <Shadow color={"#00000020"} dx={0} dy={0} blur={2} />
         {/* <Shadow color={"#00000040"} dx={0} dy={0} blur={10} /> */}
