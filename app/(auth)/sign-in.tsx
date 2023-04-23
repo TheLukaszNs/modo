@@ -8,7 +8,6 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Text } from "../../components/Typography";
 import { Box } from "../../components/UI/Box";
-import { Canvas, LinearGradient, Rect, vec } from "@shopify/react-native-skia";
 import { Input } from "../../components/Input";
 import { useState } from "react";
 import auth from "@react-native-firebase/auth";

@@ -36,7 +36,7 @@ export const useProtectedRoute = (user: FirebaseAuthTypes.User | null) => {
     if (!user && !inAuthGroup) {
       router.replace("/sign-in");
     } else if (user && inAuthGroup) {
-      router.replace("/");
+      router.replace("/dashboard");
     }
   }, [user, segments]);
 };

@@ -1,20 +1,14 @@
-import { createBox, createText, useTheme } from "@shopify/restyle";
-import { Theme } from "../common/theme";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import { ProgressBar } from "../components/ProgressBar";
-import { MovieListItem } from "../components/MovieListItem";
-import { StatsHeader } from "../components/StatsHeader";
-import { Header } from "../components/Header";
-import { ScrollView, useWindowDimensions } from "react-native";
-import { BadgeFilter } from "../components/BadgeFilter";
+import { Box } from "../../components/UI/Box";
+import { Header } from "../../components/Header";
+import { BadgeFilter } from "../../components/BadgeFilter";
 import { useState } from "react";
-import { LastSeen } from "../components/LastSeen";
+import { ScrollView, useWindowDimensions } from "react-native";
+import { Theme } from "../../common/theme";
+import { useTheme } from "@shopify/restyle";
+import { Text } from "../../components/Typography";
+import { LastSeen } from "../../components/LastSeen";
 import auth from "@react-native-firebase/auth";
-import { Redirect, Tabs } from "expo-router";
-
-const Box = createBox<Theme>();
-const Text = createText<Theme>();
 
 const FILTERS = [
   { name: "ostatnio obejrzane", value: "lastWatched" },
@@ -24,20 +18,27 @@ const FILTERS = [
 
 type Filter = (typeof FILTERS)[number]["value"];
 
-export default function Page() {
+export default function DashobardPage() {
   const [filter, setFilter] = useState<Filter>("lastWatched");
   const { width } = useWindowDimensions();
 
   const theme = useTheme<Theme>();
 
-  return <Redirect href="/(tabs)/dashboard" />;
-
   return (
-    <Box flex={1} py="m" backgroundColor="mainBackground">
-      <SafeAreaView style={{ flex: 1 }}>
-        <Box px="l" gap="m">
-          <Header />
+    <Box flex={1} backgroundColor="mainBackground">
+      <Header />
 
+      <Box my="s" />
+
+      <ScrollView
+        style={{
+          flex: 1,
+        }}
+        contentContainerStyle={{
+          flexGrow: 1,
+        }}
+      >
+        <Box px="l" gap="m">
           <Box maxWidth="85%">
             <BadgeFilter
               items={FILTERS}
@@ -115,16 +116,8 @@ export default function Page() {
               obejrzanych filmów i seriali
             </Text>
           </Box>
-
-          <Text
-            onPress={() => {
-              auth().signOut();
-            }}
-          >
-            Wyloguj 🔓
-          </Text>
         </Box>
-      </SafeAreaView>
+      </ScrollView>
     </Box>
   );
 }

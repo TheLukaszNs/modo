@@ -3,10 +3,11 @@ import { createTheme } from "@shopify/restyle";
 const palette = {
   lightBlue: "#E6FFFD",
   pastelGreen: "#B7F0B1",
-  pastelYellow: "#FDF3BA",
+  pastelYellow: "#FFF389",
   pastelRed: "#FF6F6F",
   pastelBlue: "#557AFF",
   pastelBeige: "#FFFAEF",
+  pastelDarkBeige: "#e8d9c5",
 
   black: "#000000",
   white: "#FFFFFF",
