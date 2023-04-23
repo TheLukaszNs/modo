@@ -23,14 +23,14 @@ export const Input = ({ suffixIcon, ...props }: InputProps) => {
       <TextInput
         style={{
           flex: 1,
-          fontSize: 24,
+          fontSize: 18,
         }}
         {...props}
       />
       {suffixIcon && (
         <Icon
           name={suffixIcon}
-          size={32}
+          size={24}
           color="black"
           style={{ marginLeft: 8 }}
         />

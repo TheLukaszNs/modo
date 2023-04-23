@@ -7,83 +7,38 @@ import { MovieListItem } from "../components/MovieListItem";
 import { StatsHeader } from "../components/StatsHeader";
 import { Header } from "../components/Header";
 import { ScrollView } from "react-native";
+import { BadgeFilter } from "../components/BadgeFilter";
+import { useState } from "react";
 
 const Box = createBox<Theme>();
 const Text = createText<Theme>();
 
+const FILTERS = [
+  { name: "ostatnio obejrzane", value: "lastWatched" },
+  { name: "nowości", value: "new" },
+  { name: "polecane", value: "popular" },
+] as const;
+
+type Filter = (typeof FILTERS)[number]["value"];
+
 export default function Page() {
+  const [filter, setFilter] = useState<Filter>("lastWatched");
   const theme = useTheme<Theme>();
 
   return (
     <Box flex={1} py="m" backgroundColor="mainBackground">
       <SafeAreaView style={{ flex: 1 }}>
-        <Box px="l">
+        <Box px="l" gap="m">
           <Header />
 
-          <StatsHeader />
-
-          <Text mt="l" fontSize={18} fontWeight="700">
-            Ostatnio obejrzane
-          </Text>
+          <BadgeFilter
+            items={FILTERS}
+            getSelected={(item) => item.value === filter}
+            labelExtractor={(item) => item.name}
+            keyExtractor={(item) => item.value}
+            onChange={(item) => setFilter(item.value)}
+          />
         </Box>
-
-        <ScrollView
-          horizontal
-          style={{
-            flexGrow: 0,
-            marginTop: theme.spacing.s,
-          }}
-          contentContainerStyle={{
-            paddingHorizontal: theme.spacing.l,
-            gap: theme.spacing.m,
-          }}
-          showsHorizontalScrollIndicator={false}
-        >
-          <MovieListItem
-            movie={{
-              id: 0,
-              image: "https://picsum.photos/200/300",
-              title: "The Shawshank Redemption",
-            }}
-            tags={["Film", "Dramat", "Kryminał"]}
-          />
-
-          <MovieListItem
-            movie={{
-              id: 1,
-              image: "https://picsum.photos/200/300",
-              title: "The Godfather",
-            }}
-            tags={["Film", "Dramat", "Kryminał"]}
-          />
-
-          <MovieListItem
-            movie={{
-              id: 2,
-              image: "https://picsum.photos/200/300",
-              title: "Stranger Things",
-            }}
-            tags={["Serial", "Dramat", "Sci-Fi", "s3"]}
-          />
-
-          <MovieListItem
-            movie={{
-              id: 3,
-              image: "https://picsum.photos/200/300",
-              title: "The Godfather: Part II",
-            }}
-            tags={["Film", "Dramat", "Kryminał"]}
-          />
-
-          <MovieListItem
-            movie={{
-              id: 4,
-              image: "https://picsum.photos/200/300",
-              title: "The Dark Knight",
-            }}
-            tags={["Film", "Dramat", "Kryminał"]}
-          />
-        </ScrollView>
       </SafeAreaView>
     </Box>
   );

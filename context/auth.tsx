@@ -1,9 +1,15 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  PropsWithChildren,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import { useRouter, useSegments } from "expo-router";
 
 type AuthContextType = {
-  user?: FirebaseAuthTypes.User;
+  user: FirebaseAuthTypes.User | null;
   isAuthenticated: boolean;
   loading: boolean;
 };
@@ -20,32 +26,24 @@ export const useAuth = () => {
   return context;
 };
 
-export const useProtectedRoute = (user: FirebaseAuthTypes.User) => {
+export const useProtectedRoute = (user: FirebaseAuthTypes.User | null) => {
   const segments = useSegments();
   const router = useRouter();
 
   useEffect(() => {
     const inAuthGroup = segments[0] === "(auth)";
 
-    console.log("inAuthGroup", segments);
-
-    if (
-      // If the user is not signed in and the initial segment is not anything in the auth group.
-      !user &&
-      !inAuthGroup
-    ) {
-      // Redirect to the sign-in page.
+    if (!user && !inAuthGroup) {
       router.replace("/sign-in");
     } else if (user && inAuthGroup) {
-      // Redirect away from the sign-in page.
       router.replace("/");
     }
   }, [user, segments]);
 };
 
-export const AuthProvider = ({ children }) => {
+export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<FirebaseAuthTypes.User>(null);
+  const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
 
   useProtectedRoute(user);
 

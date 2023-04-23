@@ -50,7 +50,7 @@ export default function Page() {
           style={{
             marginLeft: "auto",
             marginRight: "auto",
-            width: width,
+            width: width * 0.8,
             height: undefined,
             aspectRatio: 1,
           }}

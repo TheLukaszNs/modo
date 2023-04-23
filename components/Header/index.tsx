@@ -1,38 +1,19 @@
+import { useAuth } from "../../context/auth";
 import { Text } from "../Typography";
 import { Box } from "../UI/Box";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import auth from "@react-native-firebase/auth";
 
 export const Header = () => {
+  const { user } = useAuth();
+
   return (
     <Box flexDirection="row" justifyContent="space-between" alignItems="center">
-      <Text variant="header">
-        Hej,{"\n"}
-        <Text variant="header" fontWeight="900">
-          Łukasz
-        </Text>
-        !
+      <Text fontSize={24} fontWeight="700">
+        modo
       </Text>
 
-      <Box flexDirection="row" alignItems="center" gap="m">
-        <Box
-          width={48}
-          height={48}
-          borderRadius={32}
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Icon name="account" color="black" size={24} />
-        </Box>
-
-        <Icon
-          name="logout"
-          size={24}
-          onPress={async () => {
-            await auth().signOut();
-          }}
-        />
-      </Box>
+      <Text fontSize={16}>szukaj</Text>
     </Box>
   );
 };

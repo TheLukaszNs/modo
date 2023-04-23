@@ -52,7 +52,7 @@ export const Button = ({ children, variant = "flat", onPress }: Props) => {
         borderWidth={1}
         borderColor="black"
       >
-        <Text color="white" fontSize={24} fontWeight="700">
+        <Text color="white" fontSize={20} fontWeight="700">
           {children}
         </Text>
       </Box>
