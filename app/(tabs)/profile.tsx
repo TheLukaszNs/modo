@@ -20,8 +20,8 @@ export default function ProfilePage() {
           borderColor="black"
         />
 
-        <Text fontSize={32} fontWeight="900">
-          Łukasz M.
+        <Text fontSize={32} fontWeight="900" textAlign="center">
+          {auth().currentUser?.displayName ?? "?"}
         </Text>
 
         <Pressable

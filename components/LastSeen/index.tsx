@@ -1,5 +1,6 @@
 import { useTheme } from "@shopify/restyle";
 import Animated, {
+  useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
@@ -13,6 +14,7 @@ import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { clamp, snapPoint } from "react-native-redash";
 import { Pressable } from "react-native";
 import { Button } from "../Button";
+import { useUserMovies } from "../../hooks/useUserMovies";
 
 const ITEM_WIDTH = 320;
 const ITEM_HEIGHT = 220;
@@ -37,27 +39,63 @@ const cards = [
   },
 ] as const;
 
-export const LastSeen = () => {
+type Props = {
+  onSeeAllPress: () => void;
+};
+
+export const LastSeen = ({ onSeeAllPress }: Props) => {
   const indexOffset = useSharedValue(0);
   const theme = useTheme<Theme>();
+
+  const movies = useUserMovies()?.watched ?? [];
+
+  if (movies.length === 0) {
+    return (
+      <Box justifyContent="center" alignItems="center" py="l" my="m">
+        <Text fontWeight="900" fontSize={20}>
+          Brak filmów i seriali 😱
+        </Text>
+        <Box alignSelf="center" width={220} mt="m">
+          <Button>dodaj</Button>
+        </Box>
+      </Box>
+    );
+  }
 
   return (
     <Box
       position="relative"
-      height={ITEM_HEIGHT + ITEM_MARGIN * 3}
+      height={ITEM_HEIGHT + ITEM_MARGIN * Math.min(movies.length, 3)}
       margin="l"
       justifyContent="center"
     >
-      <Box zIndex={-100} alignSelf="center" width={220}>
-        <Button>zobacz wszystkie</Button>
+      <Box
+        zIndex={-100}
+        alignSelf="center"
+        alignItems="center"
+        gap="l"
+        width={220}
+      >
+        <Button onPress={onSeeAllPress}>zobacz wszystkie</Button>
+        <Text
+          fontSize={16}
+          fontWeight="900"
+          color="pastelBlue"
+          textDecorationLine="underline"
+          onPress={() => {
+            indexOffset.value = withSpring(0);
+          }}
+        >
+          odśwież listę
+        </Text>
       </Box>
 
-      {cards.map((card, index) => (
+      {movies.map((movie, index) => (
         <LastSeenItem
-          key={index}
+          key={movie.id ?? index}
           index={index}
-          title={card.title}
-          backgroundColor={card.backgroundColor}
+          title={movie.title}
+          backgroundColor={"pastelGreen"}
           indexOffset={indexOffset}
         />
       ))}
@@ -65,7 +103,7 @@ export const LastSeen = () => {
   );
 };
 
-type Props = {
+type ItemProps = {
   index: number;
   title: string;
   backgroundColor?: keyof Theme["colors"];
@@ -77,16 +115,28 @@ const LastSeenItem = ({
   title,
   backgroundColor,
   indexOffset,
-}: Props) => {
+}: ItemProps) => {
   const theme = useTheme<Theme>();
   const offsetX = useSharedValue(0);
   const offsetY = useSharedValue(0);
-  const theta = useSharedValue(Math.random() * 1 - 1);
+  const theta = Math.random() * (1 / 4) - 1 / 8;
+  const rotationZ = useSharedValue(theta);
   const ctx = useSharedValue({ x: 0, y: 0 });
+
+  useAnimatedReaction(
+    () => indexOffset,
+    () => {
+      if (indexOffset.value < index) {
+        offsetX.value = withSpring(0);
+        offsetY.value = withSpring(0);
+      }
+    },
+  );
 
   const gesture = Gesture.Pan()
     .onBegin((e) => {
       ctx.value = { x: offsetX.value, y: offsetY.value };
+      rotationZ.value = withTiming(0);
     })
     .onUpdate((e) => {
       offsetX.value = e.translationX;
@@ -100,17 +150,29 @@ const LastSeenItem = ({
       if (destination !== 0) {
         indexOffset.value = withSpring(indexOffset.value + 1);
       }
+    })
+    .onFinalize(() => {
+      rotationZ.value = withTiming(theta);
     });
 
   const rStyles = useAnimatedStyle(() => {
     return {
       transform: [
         {
+          perspective: 1000,
+        },
+        {
           translateX: offsetX.value,
         },
         {
           translateY:
             (index - (indexOffset?.value ?? 0)) * ITEM_MARGIN + offsetY.value,
+        },
+        {
+          rotateX: "30deg",
+        },
+        {
+          rotateZ: `${rotationZ.value}rad`,
         },
         {
           scale: clamp(1 - (index - (indexOffset?.value ?? 0)) * 0.05, 0, 1),

@@ -15,3 +15,5 @@ web-build/
 
 # Firebase
 GoogleService-Info.plist
+
+.env

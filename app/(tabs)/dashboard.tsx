@@ -9,6 +9,7 @@ import { useTheme } from "@shopify/restyle";
 import { Text } from "../../components/Typography";
 import { LastSeen } from "../../components/LastSeen";
 import auth from "@react-native-firebase/auth";
+import { useRouter } from "expo-router";
 
 const FILTERS = [
   { name: "ostatnio obejrzane", value: "lastWatched" },
@@ -21,6 +22,7 @@ type Filter = (typeof FILTERS)[number]["value"];
 export default function DashobardPage() {
   const [filter, setFilter] = useState<Filter>("lastWatched");
   const { width } = useWindowDimensions();
+  const router = useRouter();
 
   const theme = useTheme<Theme>();
 
@@ -50,7 +52,9 @@ export default function DashobardPage() {
           </Box>
         </Box>
 
-        <LastSeen />
+        {filter === "lastWatched" && (
+          <LastSeen onSeeAllPress={() => router.push("/list")} />
+        )}
 
         <Box px="l" gap="s">
           <Text fontSize={24} fontWeight="900">
