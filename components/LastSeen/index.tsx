@@ -1,5 +1,6 @@
 import { useTheme } from "@shopify/restyle";
 import Animated, {
+  Easing,
   useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
@@ -15,6 +16,7 @@ import { clamp, snapPoint } from "react-native-redash";
 import { Pressable } from "react-native";
 import { Button } from "../Button";
 import { useUserMovies } from "../../hooks/useUserMovies";
+import { Rating } from "../Rating";
 
 const ITEM_WIDTH = 320;
 const ITEM_HEIGHT = 220;
@@ -65,7 +67,7 @@ export const LastSeen = ({ onSeeAllPress }: Props) => {
   return (
     <Box
       position="relative"
-      height={ITEM_HEIGHT + ITEM_MARGIN * Math.min(movies.length, 3)}
+      height={ITEM_HEIGHT}
       margin="l"
       justifyContent="center"
     >
@@ -95,6 +97,7 @@ export const LastSeen = ({ onSeeAllPress }: Props) => {
           key={movie.id ?? index}
           index={index}
           title={movie.title}
+          rating={movie.rating ?? 0}
           backgroundColor={"pastelGreen"}
           indexOffset={indexOffset}
         />
@@ -106,6 +109,7 @@ export const LastSeen = ({ onSeeAllPress }: Props) => {
 type ItemProps = {
   index: number;
   title: string;
+  rating: number;
   backgroundColor?: keyof Theme["colors"];
   indexOffset: Animated.SharedValue<number>;
 };
@@ -113,13 +117,14 @@ type ItemProps = {
 const LastSeenItem = ({
   index,
   title,
+  rating,
   backgroundColor,
   indexOffset,
 }: ItemProps) => {
   const theme = useTheme<Theme>();
   const offsetX = useSharedValue(0);
   const offsetY = useSharedValue(0);
-  const theta = Math.random() * (1 / 4) - 1 / 8;
+  const theta = Math.random() * (1 / 8) - 1 / 16;
   const rotationZ = useSharedValue(theta);
   const ctx = useSharedValue({ x: 0, y: 0 });
 
@@ -136,7 +141,9 @@ const LastSeenItem = ({
   const gesture = Gesture.Pan()
     .onBegin((e) => {
       ctx.value = { x: offsetX.value, y: offsetY.value };
-      rotationZ.value = withTiming(0);
+      rotationZ.value = withTiming(0, {
+        easing: Easing.inOut(Easing.ease),
+      });
     })
     .onUpdate((e) => {
       offsetX.value = e.translationX;
@@ -152,14 +159,16 @@ const LastSeenItem = ({
       }
     })
     .onFinalize(() => {
-      rotationZ.value = withTiming(theta);
+      rotationZ.value = withTiming(theta, {
+        easing: Easing.inOut(Easing.ease),
+      });
     });
 
   const rStyles = useAnimatedStyle(() => {
     return {
       transform: [
         {
-          perspective: 1000,
+          perspective: 1500,
         },
         {
           translateX: offsetX.value,
@@ -169,7 +178,7 @@ const LastSeenItem = ({
             (index - (indexOffset?.value ?? 0)) * ITEM_MARGIN + offsetY.value,
         },
         {
-          rotateX: "30deg",
+          rotateX: "20deg",
         },
         {
           rotateZ: `${rotationZ.value}rad`,
@@ -204,6 +213,10 @@ const LastSeenItem = ({
         <Text fontSize={36} fontWeight="900" numberOfLines={2}>
           {title}
         </Text>
+
+        <Box my="s">
+          <Rating rating={rating} />
+        </Box>
 
         <IconForwardLong
           width={106}
