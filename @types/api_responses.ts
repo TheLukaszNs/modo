@@ -2,6 +2,7 @@ export type MultiSearchResponse = {
   results: ({
     adult: boolean;
     backdrop_path: string;
+    poster_path: string;
     id: number;
     overview: string;
     media_type: "movie" | "tv" | "person";

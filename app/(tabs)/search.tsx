@@ -13,6 +13,8 @@ import { Theme } from "../../common/theme";
 import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
 import { useUserMovies } from "../../hooks/useUserMovies";
+import { Image } from "expo-image";
+import { Canvas, LinearGradient, Rect } from "@shopify/react-native-skia";
 
 export default function SearchPage() {
   const [query, setQuery] = useState("");
@@ -115,6 +117,8 @@ const SearchItem = memo(
     onPress?: () => void;
     item: MultiSearchResponse["results"][number];
   }) => {
+    const [size, setSize] = useState({ width: 0, height: 0 });
+
     return (
       <Pressable disabled={isOnList} onPress={onPress}>
         <Box
@@ -125,19 +129,55 @@ const SearchItem = memo(
           borderRadius={4}
           gap="s"
           opacity={isOnList ? 0.3 : 1}
+          overflow="hidden"
+          onLayout={(e) => setSize(e.nativeEvent.layout)}
         >
-          <Text fontSize={24} fontWeight="900">
-            {item.media_type === "movie" ? item.title : item.name}
-          </Text>
-          <Text fontSize={14} fontWeight="700">
-            {item.media_type === "movie"
-              ? `Premiera: ${item.release_date || "?"}`
-              : `Premiera: ${item.first_air_date || "?"}`}
-          </Text>
+          <Box
+            zIndex={1}
+            maxWidth={220}
+            flex={1}
+            justifyContent="space-between"
+          >
+            <Text fontSize={24} fontWeight="900" numberOfLines={2}>
+              {item.media_type === "movie" ? item.title : item.name}
+            </Text>
+            <Text fontSize={14} fontWeight="700">
+              {item.media_type === "movie"
+                ? `Premiera: ${item.release_date || "?"}`
+                : `Premiera: ${item.first_air_date || "?"}`}
+            </Text>
 
-          <Text fontSize={14} fontWeight="500" numberOfLines={3}>
-            {item.overview}
-          </Text>
+            <Text fontSize={14} fontWeight="500" numberOfLines={3}>
+              {item.overview}
+            </Text>
+          </Box>
+
+          <Box position="absolute" right={0} top={0} bottom={0} width={140}>
+            <Image
+              source={`https://www.themoviedb.org/t/p/w1280/${item.poster_path}`}
+              contentFit="cover"
+              style={{ flex: 1, width: "100%" }}
+              transition={1000}
+            />
+
+            <Canvas
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+              }}
+            >
+              <Rect x={0} y={0} width={140} height={size.height}>
+                <LinearGradient
+                  start={{ x: 20, y: size.height / 2 }}
+                  end={{ x: 140, y: size.height / 2 }}
+                  colors={["white", "rgba(255,255,255,0)"]}
+                />
+              </Rect>
+            </Canvas>
+          </Box>
         </Box>
       </Pressable>
     );
