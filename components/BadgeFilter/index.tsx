@@ -56,8 +56,8 @@ const BadgeFilterItem = ({
 }) => {
   const rStyle = useAnimatedStyle(() => {
     return {
-      flex: withTiming(selected ? 2 : 1, {
-        duration: 150,
+      flex: withSpring(selected ? 2 : 1, {
+        // duration: 150,
       }),
     };
   }, [selected]);

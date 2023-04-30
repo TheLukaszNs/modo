@@ -5,3 +5,4 @@ export { NavListIcon } from "./NavList";
 export { NavHomeIcon } from "./NavHome";
 export { StarIcon } from "./Star";
 export { HalfStarIcon } from "./HalfStar";
+export { SearchIcon } from "./Search";

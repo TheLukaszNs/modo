@@ -4,9 +4,11 @@ import { Text } from "../Typography";
 import { Box } from "../UI/Box";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import auth from "@react-native-firebase/auth";
+import { useRouter } from "expo-router";
 
 export const Header = () => {
   const { user } = useAuth();
+  const router = useRouter();
 
   return (
     <SafeAreaView>
@@ -20,7 +22,14 @@ export const Header = () => {
           modo
         </Text>
 
-        <Text fontSize={16}>szukaj</Text>
+        <Text
+          fontSize={16}
+          onPress={() => {
+            router.push("/search");
+          }}
+        >
+          szukaj
+        </Text>
       </Box>
     </SafeAreaView>
   );

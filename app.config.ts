@@ -9,4 +9,7 @@ module.exports = ({ config }: ConfigContext): ExpoConfig => ({
     googleServicesFile:
       process.env.GOOGLE_SERVICES_IOS ?? "./GoogleService-Info.plist",
   },
+  extra: {
+    apiKey: process.env.MOVIEDB_KEY ?? "",
+  },
 });

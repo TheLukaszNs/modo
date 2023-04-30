@@ -7,6 +7,7 @@ import { NavProfileIcon } from "../../components/Icons";
 import { NavListIcon } from "../../components/Icons";
 import { NavHomeIcon } from "../../components/Icons";
 import { SvgProps } from "react-native-svg";
+import { SearchIcon } from "../../components/Icons";
 
 export default function Layout() {
   const theme = useTheme<Theme>();
@@ -38,6 +39,8 @@ export default function Layout() {
             case "profile":
               Icon = NavProfileIcon;
               break;
+            case "search":
+              Icon = SearchIcon;
           }
 
           return (
@@ -64,6 +67,7 @@ export default function Layout() {
     >
       <Tabs.Screen name="list" />
       <Tabs.Screen name="dashboard" />
+      <Tabs.Screen name="search" />
       <Tabs.Screen name="profile" />
     </Tabs>
   );

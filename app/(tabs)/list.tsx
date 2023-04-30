@@ -6,6 +6,10 @@ import { Header } from "../../components/Header";
 import { BadgeFilter } from "../../components/BadgeFilter";
 import { useState } from "react";
 import { PastelCard } from "../../components/PastelCard";
+import { FlatList } from "react-native";
+import { useTheme } from "@shopify/restyle";
+import { Theme } from "../../common/theme";
+import { Rating } from "../../components/Rating";
 
 const FILTERS = [
   {
@@ -24,13 +28,15 @@ export default function ListPage() {
   const [filter, setFilter] = useState<Filter>("watched");
   const allMovies = useUserMovies();
 
+  const theme = useTheme<Theme>();
+
   const movies = filter === "watched" ? allMovies?.watched : allMovies?.list;
 
   return (
     <Box flex={1} backgroundColor="pastelBeige">
       <Header />
 
-      <Box px="l" mt="m" gap="m">
+      <Box px="l" mt="m" gap="m" flex={1}>
         <BadgeFilter
           items={FILTERS}
           getSelected={(item) => item.value === filter}
@@ -39,19 +45,27 @@ export default function ListPage() {
           onChange={(item) => setFilter(item.value)}
         />
 
-        {movies?.map((movie, index) => (
-          <PastelCard key={movie.id ?? index}>
-            <Text fontSize={24} fontWeight="900">
-              {movie.title}
-            </Text>
-            <Text mt="m" fontSize={24} fontWeight="900">
-              <Text color="pastelRed" fontSize={24} fontWeight="900">
-                {movie.rating}
+        <FlatList
+          style={{
+            flex: 1,
+          }}
+          contentContainerStyle={{
+            flexGrow: 1,
+            gap: theme.spacing.m,
+            paddingBottom: theme.spacing.m,
+          }}
+          data={movies}
+          renderItem={({ item }) => (
+            <PastelCard>
+              <Text fontSize={24} fontWeight="900" mb="m">
+                {item.title}
               </Text>
-              /5
-            </Text>
-          </PastelCard>
-        ))}
+              <Rating rating={item.rating} />
+            </PastelCard>
+          )}
+          keyExtractor={(item) => item.id.toString()}
+          showsVerticalScrollIndicator={false}
+        />
       </Box>
     </Box>
   );

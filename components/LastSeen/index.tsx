@@ -18,28 +18,15 @@ import { Button } from "../Button";
 import { useUserMovies } from "../../hooks/useUserMovies";
 import { Rating } from "../Rating";
 
-const ITEM_WIDTH = 320;
 const ITEM_HEIGHT = 220;
 const ITEM_MARGIN = 14;
 
-const cards = [
-  {
-    title: "The Shawshank Redemption",
-    backgroundColor: "white",
-  },
-  {
-    title: "The Godfather",
-    backgroundColor: "pastelGreen",
-  },
-  {
-    title: "Stranger Things",
-    backgroundColor: "pastelRed",
-  },
-  {
-    title: "Dark",
-    backgroundColor: "pastelYellow",
-  },
-] as const;
+const CARD_COLORS: (keyof Theme["colors"])[] = [
+  "white",
+  "pastelGreen",
+  "pastelRed",
+  "pastelYellow",
+];
 
 type Props = {
   onSeeAllPress: () => void;
@@ -67,7 +54,7 @@ export const LastSeen = ({ onSeeAllPress }: Props) => {
   return (
     <Box
       position="relative"
-      height={ITEM_HEIGHT}
+      height={ITEM_HEIGHT + 1 * ITEM_MARGIN}
       margin="l"
       justifyContent="center"
     >
@@ -92,16 +79,19 @@ export const LastSeen = ({ onSeeAllPress }: Props) => {
         </Text>
       </Box>
 
-      {movies.map((movie, index) => (
-        <LastSeenItem
-          key={movie.id ?? index}
-          index={index}
-          title={movie.title}
-          rating={movie.rating ?? 0}
-          backgroundColor={"pastelGreen"}
-          indexOffset={indexOffset}
-        />
-      ))}
+      {[...movies]
+        .reverse()
+        .slice(0, 4)
+        .map((movie, index) => (
+          <LastSeenItem
+            key={movie.id ?? index}
+            index={index}
+            title={movie.title}
+            rating={movie.rating ?? 0}
+            backgroundColor={CARD_COLORS[index % CARD_COLORS.length]}
+            indexOffset={indexOffset}
+          />
+        ))}
     </Box>
   );
 };
