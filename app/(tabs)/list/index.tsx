@@ -1,15 +1,16 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Text } from "../../components/Typography";
-import { Box } from "../../components/UI/Box";
-import { useUserMovies } from "../../hooks/useUserMovies";
-import { Header } from "../../components/Header";
-import { BadgeFilter } from "../../components/BadgeFilter";
+import { Text } from "../../../components/Typography";
+import { Box } from "../../../components/UI/Box";
+import { useUserMovies } from "../../../hooks/useUserMovies";
+import { Header } from "../../../components/Header";
+import { BadgeFilter } from "../../../components/BadgeFilter";
 import { useState } from "react";
-import { PastelCard } from "../../components/PastelCard";
-import { FlatList } from "react-native";
+import { PastelCard } from "../../../components/PastelCard";
+import { FlatList, Pressable } from "react-native";
 import { useTheme } from "@shopify/restyle";
-import { Theme } from "../../common/theme";
-import { Rating } from "../../components/Rating";
+import { Theme } from "../../../common/theme";
+import { Rating } from "../../../components/Rating";
+import { useRouter } from "expo-router";
 
 const FILTERS = [
   {
@@ -29,6 +30,7 @@ export default function ListPage() {
   const allMovies = useUserMovies();
 
   const theme = useTheme<Theme>();
+  const router = useRouter();
 
   const movies = filter === "watched" ? allMovies?.watched : allMovies?.list;
 
@@ -56,12 +58,24 @@ export default function ListPage() {
           }}
           data={movies}
           renderItem={({ item }) => (
-            <PastelCard>
-              <Text fontSize={24} fontWeight="900" mb="m">
-                {item.title}
-              </Text>
-              <Rating rating={item.rating} />
-            </PastelCard>
+            <Pressable
+              onPress={() => {
+                router.push({
+                  pathname: `/list/[id]`,
+                  params: {
+                    id: item.id,
+                    type: item.type,
+                  },
+                });
+              }}
+            >
+              <PastelCard>
+                <Text fontSize={24} fontWeight="900" mb="m">
+                  {item.title}
+                </Text>
+                <Rating rating={item.rating} />
+              </PastelCard>
+            </Pressable>
           )}
           keyExtractor={(item) => item.id.toString()}
           showsVerticalScrollIndicator={false}

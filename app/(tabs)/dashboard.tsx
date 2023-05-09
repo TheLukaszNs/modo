@@ -13,8 +13,8 @@ import { useRouter } from "expo-router";
 
 const FILTERS = [
   { name: "ostatnio obejrzane", value: "lastWatched" },
-  { name: "nowości", value: "new" },
-  { name: "polecane", value: "popular" },
+  // { name: "nowości", value: "new" },
+  // { name: "polecane", value: "popular" },
 ] as const;
 
 type Filter = (typeof FILTERS)[number]["value"];

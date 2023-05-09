@@ -15,6 +15,7 @@ import firestore from "@react-native-firebase/firestore";
 import { useUserMovies } from "../../hooks/useUserMovies";
 import { Image } from "expo-image";
 import { Canvas, LinearGradient, Rect } from "@shopify/react-native-skia";
+import { Movie } from "../../@types/movie";
 
 export default function SearchPage() {
   const [query, setQuery] = useState("");
@@ -24,7 +25,7 @@ export default function SearchPage() {
     firestore().collection("movies").doc(auth().currentUser?.uid),
   ).current;
 
-  const moviesQuery = useQuery({
+  const moviesQuery = useQuery<unknown, unknown, MultiSearchResponse>({
     queryKey: ["movies", "query", debouncedQuery],
     queryFn: () =>
       MoviesAPI.search({ query: debouncedQuery, language: "pl-PL" }),
@@ -40,7 +41,8 @@ export default function SearchPage() {
         id: item.id,
         title: item.media_type === "movie" ? item.title : item.name,
         rating: 5,
-      }),
+        type: item.media_type,
+      } as Movie),
     });
   };
 

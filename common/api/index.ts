@@ -1,25 +1,51 @@
 import Constants from "expo-constants";
 import ky from "ky";
 import { z } from "zod";
-import { MultiSearchResponse } from "../../@types/api_responses";
+import {
+  MovieDetailsResponse,
+  MultiSearchResponse,
+} from "../../@types/api_responses";
 
 const BASE_URL = "https://api.themoviedb.org/3/";
 
-const createFetchWithKey = <T extends z.AnyZodObject, Params = z.infer<T>>(
+const createFetchWithKey = <
+  K extends z.AnyZodObject,
+  Params extends {} = z.infer<K>,
+>(
   endpoint: string,
-  input?: T,
+  input?: K,
 ) => {
   const url = `${BASE_URL}${endpoint}`;
 
   return async (params: Params) => {
-    return ky
-      .get(url, {
-        searchParams: {
-          api_key: Constants.expoConfig?.extra?.apiKey,
-          ...params,
-        },
-      })
-      .then((data) => data.json<MultiSearchResponse>());
+    try {
+      const parsedParams = input?.parse(params);
+      let newUrl = url;
+
+      // Replace all the params in the url (e.g. /movie/:id to /movie/123)
+      Object.entries(parsedParams ?? {}).forEach(([key, value]) => {
+        const paramsRegex = new RegExp(`:${key}`, "g");
+
+        // Replace the param in the url if it exists
+        if (newUrl.match(paramsRegex)) {
+          newUrl = newUrl.replace(paramsRegex, value);
+
+          // Remove the param from the object
+          delete parsedParams?.[key];
+        }
+      });
+
+      return ky
+        .get(newUrl, {
+          searchParams: {
+            api_key: Constants.expoConfig?.extra?.apiKey,
+            ...parsedParams,
+          },
+        })
+        .then((data) => data.json<unknown>());
+    } catch (error) {
+      console.error(error);
+    }
   };
 };
 
@@ -28,6 +54,20 @@ export const MoviesAPI = {
     "search/multi",
     z.object({
       query: z.string(),
+      language: z.string().optional(),
+    }),
+  ),
+  getMovieById: createFetchWithKey(
+    "movie/:id",
+    z.object({
+      id: z.string(),
+      language: z.string().optional(),
+    }),
+  ),
+  getShowById: createFetchWithKey(
+    "tv/:id",
+    z.object({
+      id: z.string(),
       language: z.string().optional(),
     }),
   ),
