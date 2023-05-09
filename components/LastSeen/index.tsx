@@ -36,7 +36,7 @@ export const LastSeen = ({ onSeeAllPress }: Props) => {
   const indexOffset = useSharedValue(0);
   const theme = useTheme<Theme>();
 
-  const movies = useUserMovies()?.watched ?? [];
+  const movies = useUserMovies()?.list ?? [];
 
   if (movies.length === 0) {
     return (

@@ -13,16 +13,34 @@ import {
 import { ScrollView } from "react-native";
 import { useTheme } from "@shopify/restyle";
 import { Theme } from "../../../common/theme";
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import { useRef } from "react";
+import firestore from "@react-native-firebase/firestore";
+import auth from "@react-native-firebase/auth";
+import { useUserMovies } from "../../../hooks/useUserMovies";
 
 type DetailsSearchParams = {
   id: string;
   type: Movie["type"];
+  status: Movie["status"];
 };
 
 export default function DetailsPage() {
   const theme = useTheme<Theme>();
 
   const params = useSearchParams() as DetailsSearchParams;
+
+  const movieFromDb = useUserMovies()?.list.find(
+    (movie) => movie.id.toString() === params.id,
+  );
+
+  const entryDoc = useRef(
+    firestore()
+      .collection("movies")
+      .doc(auth().currentUser?.uid)
+      .collection("list")
+      .doc(params.id),
+  ).current;
 
   const movieDetailsQuery = useQuery({
     queryKey: [
@@ -78,7 +96,19 @@ export default function DetailsPage() {
 
   return (
     <Box flex={1} backgroundColor="pastelBeige" gap="m">
-      <Header />
+      <Header
+        right={
+          <Icon
+            name={movieFromDb?.status === "watched" ? "eye-off" : "eye"}
+            size={24}
+            onPress={async () => {
+              await entryDoc.update({
+                status: movieFromDb?.status === "watched" ? "list" : "watched",
+              });
+            }}
+          />
+        }
+      />
       <Box px="l" gap="m" flex={1}>
         {params.type === "movie" ? (
           <>

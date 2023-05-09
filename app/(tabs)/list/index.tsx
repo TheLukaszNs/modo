@@ -19,7 +19,7 @@ const FILTERS = [
   },
   {
     name: "do obejrzenia",
-    value: "toWatch",
+    value: "list",
   },
 ] as const;
 
@@ -27,12 +27,12 @@ type Filter = (typeof FILTERS)[number]["value"];
 
 export default function ListPage() {
   const [filter, setFilter] = useState<Filter>("watched");
-  const allMovies = useUserMovies();
+  const allMovies = useUserMovies()?.list;
 
   const theme = useTheme<Theme>();
   const router = useRouter();
 
-  const movies = filter === "watched" ? allMovies?.watched : allMovies?.list;
+  const movies = allMovies?.filter((movie) => movie.status === filter);
 
   return (
     <Box flex={1} backgroundColor="pastelBeige">

@@ -6,7 +6,11 @@ import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import auth from "@react-native-firebase/auth";
 import { useRouter } from "expo-router";
 
-export const Header = () => {
+type Props = {
+  right?: React.ReactElement;
+};
+
+export const Header = ({ right }: Props) => {
   const { user } = useAuth();
   const router = useRouter();
 
@@ -22,14 +26,18 @@ export const Header = () => {
           modo
         </Text>
 
-        <Text
-          fontSize={16}
-          onPress={() => {
-            router.push("/search");
-          }}
-        >
-          szukaj
-        </Text>
+        {right ? (
+          right
+        ) : (
+          <Text
+            fontSize={16}
+            onPress={() => {
+              router.push("/search");
+            }}
+          >
+            szukaj
+          </Text>
+        )}
       </Box>
     </SafeAreaView>
   );

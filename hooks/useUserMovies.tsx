@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { Movie } from "../@types/movie";
 
 type UserMovies = {
-  watched: Movie[];
   list: Movie[];
 };
 
@@ -12,27 +11,21 @@ export const useUserMovies = () => {
   const [movies, setMovies] = useState<UserMovies | null>(null);
   const [loading, setLoading] = useState(true);
   const moviesDoc = useRef(
-    firestore().collection("movies").doc(auth().currentUser?.uid),
+    firestore()
+      .collection(`movies`)
+      .doc(auth().currentUser?.uid)
+      .collection("list"),
   ).current;
 
   useEffect(() => {
     const unsubscribe = moviesDoc.onSnapshot(async (snapshot) => {
       setLoading(true);
 
-      if (!snapshot.exists) {
-        await moviesDoc.set({
-          watched: [],
-          list: [],
-        });
-      }
-
-      const data = snapshot.data();
-
-      if (!data) {
+      if (snapshot.docs.length === 0) {
         return;
       }
 
-      setMovies(data as UserMovies);
+      setMovies({ list: snapshot.docs.map((doc) => doc.data()) } as UserMovies);
       setLoading(false);
     });
 

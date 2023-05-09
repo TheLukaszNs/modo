@@ -22,7 +22,10 @@ export default function SearchPage() {
   const debouncedQuery = useDebounce(query);
 
   const moviesDoc = useRef(
-    firestore().collection("movies").doc(auth().currentUser?.uid),
+    firestore()
+      .collection("movies")
+      .doc(auth().currentUser?.uid)
+      .collection("list"),
   ).current;
 
   const moviesQuery = useQuery<unknown, unknown, MultiSearchResponse>({
@@ -36,14 +39,13 @@ export default function SearchPage() {
   const handleItemPress = async (
     item: MultiSearchResponse["results"][number],
   ) => {
-    await moviesDoc.update({
-      watched: firestore.FieldValue.arrayUnion({
-        id: item.id,
-        title: item.media_type === "movie" ? item.title : item.name,
-        rating: 5,
-        type: item.media_type,
-      } as Movie),
-    });
+    await moviesDoc.doc(item.id.toString()).set({
+      id: item.id,
+      title: item.media_type === "movie" ? item.title : item.name,
+      rating: 5,
+      type: item.media_type,
+      status: "list",
+    } as Movie);
   };
 
   return (
@@ -76,7 +78,7 @@ const MovieList = ({
   movies: MultiSearchResponse["results"];
   onPress?: (item: MultiSearchResponse["results"][number]) => void;
 }) => {
-  const userMovies = useUserMovies()?.watched;
+  const userMovies = useUserMovies()?.list;
   const theme = useTheme<Theme>();
 
   const filteredMovies = movies.filter(

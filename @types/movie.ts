@@ -3,4 +3,5 @@ export type Movie = {
   title: string;
   rating: number;
   type: "movie" | "tv";
+  status: "list" | "watched";
 };
